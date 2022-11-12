@@ -150,24 +150,29 @@ export default function WorldRenderer({ turtle, world, disableEvents, ...props }
 	useEventListener('keyup', (ev: KeyboardEvent) => {
 		if (disableEventsRef.current || !currentTurtleRef.current) return;
 		let moved = false;
+		console.log(currentTurtleRef)
 		if (ev.code === 'KeyW') {
 			moved = true;
-			currentTurtleRef.current.forward();
+			//currentTurtleRef.current.forward();
+			window.move(currentTurtleRef.current.id, 'forward');
 		} else if (ev.code === 'KeyA') {
 			moved = true;
-			currentTurtleRef.current.turnLeft();
+			//currentTurtleRef.current.turnLeft();
+			window.move(currentTurtleRef.current.id, 'turnLeft');
 		} else if (ev.code === 'KeyS') {
 			moved = true;
-			currentTurtleRef.current.back();
+			//currentTurtleRef.current.back();
+			window.move(currentTurtleRef.current.id, 'back');
 		} else if (ev.code === 'KeyD') {
 			moved = true;
-			currentTurtleRef.current.turnRight();
+			//currentTurtleRef.current.turnRight();
+			window.move(currentTurtleRef.current.id, 'turnRight');
 		} else if (ev.code === 'Space') {
 			moved = true;
-			currentTurtleRef.current.up();
+			window.move(currentTurtleRef.current.id, 'up');
 		} else if (ev.code === 'ShiftLeft') {
 			moved = true;
-			currentTurtleRef.current.down();
+			window.move(currentTurtleRef.current.id, 'down');
 		} else if (ev.code === 'KeyV') {
 			moved = true;
 			setShowWholeWorld(w => !w);

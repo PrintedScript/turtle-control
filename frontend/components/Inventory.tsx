@@ -112,7 +112,7 @@ export default function Inventory({ turtle }: InventoryProps) {
 								s: 60,
 								l: 40
 							}).toString() : undefined
-						}} onClick={() => turtle.selectSlot(i + 1)}>
+						}} onClick={() => window.selectSlot(turtle.id ,i + 1)}>
 							{item &&
 								<Tooltip title={item.name + ':' + item.damage}>
 									<Typography align="center" variant="h4">{item.count}</Typography>

@@ -56,6 +56,7 @@ export class Turtle extends EventEmitter {
 			}
 			this.id = await this.exec<number>('os.getComputerID()');
 			[this.x, this.y, this.z, this.d] = this.world.getTurtle(this);
+			await this.UpdatePosandDir();
 			this.selectedSlot = await this.exec<number>('turtle.getSelectedSlot()');
 			this.maxFuel = await this.exec<number>('turtle.getFuelLimit()');
 			this.fuel = await this.exec<number>('turtle.getFuelLevel()');
@@ -81,14 +82,22 @@ export class Turtle extends EventEmitter {
 		};
 	}
 
-	exec<T>(command: string): Promise<T> {
+	exec<T>(command: string, ...args :any): Promise<T> {
 		return new Promise(r => {
 			const nonce = getNonce();
-			this.ws.send(JSON.stringify({
-				type: 'eval',
-				function: `return ${command}`,
-				nonce
-			}));
+			if (args.length > 0) {
+				this.ws.send(JSON.stringify({
+					type: 'eval',
+					function: command,
+					nonce
+				}));
+			} else {
+				this.ws.send(JSON.stringify({
+					type: 'eval',
+					function: `return ${command}`,
+					nonce
+				}));
+			}
 
 			const listener = (resp: string) => {
 				try {
@@ -103,7 +112,6 @@ export class Turtle extends EventEmitter {
 			this.ws.on('message', listener);
 		});
 	}
-
 
 	async forward(): Promise<boolean> {
 		let r = await this.exec<boolean>('turtle.forward()');
@@ -268,9 +276,42 @@ export class Turtle extends EventEmitter {
 		}
 		return false;
 	}
+
+	async UpdatePosandDir() {
+		var location = await this.GetPosition();
+		if (location != null) {
+			var direction = await this.exec<number>('turtle.refuel();local loc1 = vector.new(gps.locate(2,false)); if not turtle.forward() then for j=1,6 do if not turtle.forward() then turtle.dig() else break end end end; local loc2 = vector.new(gps.locate(2,false)); local heading = loc2 - loc1; return ((heading.x + math.abs(heading.x) * 2) + (heading.z + math.abs(heading.z) * 3));',false)
+			if (direction != 0) {
+				switch (direction) {
+					case 1:
+						this.d = 3; // west 
+						break;
+					case 2:
+						this.d = 0; // north 
+						break;
+					case 3:
+						this.d = 1; // east
+						break;
+					case 4:
+						this.d = 2; // south
+						break;
+					default:
+					 	break;
+				}
+				var location = await this.GetPosition();
+				this.x = location!['X'];
+				this.y = location!['Y'];
+				this.z = location!['Z'];
+				console.log('Found position and direction for turtle ' + this.label + ' at ' + this.x + ',' + this.y + ',' + this.z + ' facing ' + this.d);
+				this.world.updateTurtle(this, this.x, this.y, this.z, this.d);
+			}
+		}
+	}
+
 	async refresh() {
 		await this.updateInventory();
 		await this.updateBlock();
+		await this.UpdatePosandDir();
 		this.selectedSlot = await this.exec<number>('turtle.getSelectedSlot()');
 		this.maxFuel = await this.exec<number>('turtle.getFuelLimit()');
 		this.fuel = await this.exec<number>('turtle.getFuelLevel()');
@@ -293,6 +334,33 @@ export class Turtle extends EventEmitter {
 		await this.updateInventory();
 		return r;
 	}
+	// Promise returns table of 3 numbers or null
+	GetPosition(): Promise<{X:number, Y:number, Z:number} | null> {
+		return new Promise(r => {
+			const nonce = getNonce();
+			this.ws.send(JSON.stringify({
+				type: 'location',
+				nonce
+			}));
+			const listener = async(resp: string) => {
+				let res = JSON.parse(resp);
+				if (res.nonce === nonce) {
+					if (res.data === "null") {
+						r(null as any)
+					}
+					else {
+						r({
+							X: res.data[0],
+							Y: res.data[1],
+							Z: res.data[2]
+						});
+					}
+				}
+			}
+			this.ws.on('message',listener)
+		});
+	}
+
 	undergoMitosis(): Promise<number | null> {
 		return new Promise(r => {
 			const nonce = getNonce();
