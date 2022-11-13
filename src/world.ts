@@ -33,7 +33,7 @@ export default class World extends EventEmitter {
 			return;
 		}
 		this.db.push(dataPath, block);
-		this.emit('update', this.getAllBlocks());
+		this.emit('blockupdate', { x, y, z, block });
 	}
 
 	getBlock(x: number, y: number, z: number): any {

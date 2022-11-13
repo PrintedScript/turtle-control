@@ -162,6 +162,11 @@ const IndexPage = () => {
 				setWorld(data.data);
 			} else if (data.type === 'turtles') {
 				setTurtles(JSON.parse(data.data));
+			} else if (data.type === 'blockupdate') {
+				const block = data.data;
+				world[block.x + ',' + block.y + ',' + block.z] = block.block;
+				console.log(world)
+				setWorld(world);
 			}
 		})
 

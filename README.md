@@ -8,4 +8,5 @@ The plan of this fork is to update the dependencies as most of the current depen
 - [ ] Add more automation to the turtles
 - [x] GPS support for turtles
 - [ ] Some sort of authentication for the control panel?
-- [ ] Stop sending entire world data to frontend for one block update ( Only send what is updated )
+- [x] Stop sending entire world data to frontend for one block update ( Only send what is updated )
+- [ ] Remove block from database if turtle can go into it
