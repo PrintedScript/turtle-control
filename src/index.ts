@@ -52,6 +52,9 @@ async function SendFrontendData( type: string, data: any ) {
 	world.on('blockupdate', async (block) => {
 		await SendFrontendData( 'blockupdate', block );
 	})
+	world.on('removeblock', async (block) => {
+		await SendFrontendData( 'removeblock', block );
+	})
 	turtleAddQueue.start();
 
 })();

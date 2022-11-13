@@ -167,6 +167,10 @@ const IndexPage = () => {
 				world[block.x + ',' + block.y + ',' + block.z] = block.block;
 				console.log(world)
 				setWorld(world);
+			} else if (data.type === 'removeblock') {
+				const block = data.data;
+				delete world[block.x + ',' + block.y + ',' + block.z];
+				setWorld(world);
 			}
 		})
 

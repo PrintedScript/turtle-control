@@ -28,7 +28,7 @@ export default class World extends EventEmitter {
 		if (block === 'No block to inspect') {
 			if (this.db.exists(dataPath)) {
 				this.db.delete(dataPath);
-				this.emit('update', this.getAllBlocks());
+				this.emit('removeblock', { x, y, z });
 			}
 			return;
 		}
