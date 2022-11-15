@@ -3,7 +3,8 @@
     Originally created by ottomated, modified by PrintedScript
     https://github.com/PrintedScript/turtle-control
 ]]
-
+-- Settings
+local websocketServer = "ws://localhost:5757"
 
 
 -- BEGIN JSON LIBRARY --
@@ -600,7 +601,7 @@ end
 local X,Y,Z = 0,0,0
 function websocketLoop()
 	
-	local ws, err = http.websocket("ws://127.0.0.1:5757")
+	local ws, err = http.websocket(websocketServer)
  
 	if err then
 		print(err)
