@@ -43,6 +43,9 @@ Controls
 #### Location is at 0,0,0
 Make sure your turtle has fuel in it as it is needed to determine its direction. Put any type of fuel source in its inventory, then on the control panel click that slot and then click the refuel button, after that click the refresh info button and the turtle will attempt to recalibrate its position and direction.
 
+#### ERR_PACKAGE_PATH_NOT_EXPORTED
+As of now I have not figured out how to fix this issue and seem to only appear on Windows machines, if you do know how to fix this issue please create a new issue and I will try to add it to this README
+
 # TODO List
 - [x] Use websockets to allow the frontend to communicate to the backend without having to use Carlo
 - [ ] Update dependencies to the latest release
@@ -51,3 +54,4 @@ Make sure your turtle has fuel in it as it is needed to determine its direction.
 - [ ] Some sort of authentication for the control panel?
 - [x] Stop sending entire world data to frontend for one block update ( Only send what is updated )
 - [ ] Remove block from database if turtle can go into it
+- [ ] Change the database
