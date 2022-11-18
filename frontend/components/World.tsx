@@ -1,8 +1,8 @@
-import { Canvas, MeshProps, extend, useFrame, useThree, ReactThreeFiber, useLoader } from 'react-three-fiber';
+import { Canvas, MeshProps, extend, useFrame, useThree, ReactThreeFiber, useLoader } from '@react-three/fiber';
 import { useRef, useState, useMemo, useEffect, Suspense, HTMLProps, RefObject, SetStateAction, Dispatch, useContext } from 'react';
 import { Mesh, BoxBufferGeometry, Vector3, Quaternion, Euler, Raycaster, Vector2, Object3D } from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
-// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Turtle, TurtleContext, World } from '../pages';
 import useEventListener from '@use-it/event-listener';
 import Color from 'color';
@@ -27,7 +27,7 @@ function Controls({ target }: { target: [number, number, number] }) {
 	const { camera, gl } = useThree();
 	useFrame(() => controls.current.update());
 	return (
-		<orbitControls ref={controls} target={target as any} args={[camera, gl.domElement]} dampingFactor={0.1} rotateSpeed={0.5} />
+		<orbitControls ref={controls} target={target as any} args={[camera, gl.domElement]} dampingFactor={0.1} rotateSpeed={0.5} maxDistance={30} />
 	);
 }
 
@@ -53,7 +53,7 @@ function useInterpolate(property: 'position' | 'target', position: [number, numb
 }
 
 function Model({ url, position, rotation, name }: { url: string, name: string, position: [number, number, number], rotation: [number, number, number] }) {
-	const GLTFLoader = require('three/examples/jsm/loaders/GLTFLoader').GLTFLoader;
+	//const GLTFLoader = require('three/examples/jsm/loaders/GLTFLoader').GLTFLoader;
 	const obj = useLoader(GLTFLoader, url) as any;
 	const ref = useInterpolate('position', position, rotation);
 	return (
@@ -72,7 +72,7 @@ function Model({ url, position, rotation, name }: { url: string, name: string, p
 }
 
 function OtherTurtles({ turtles, switchTurtle }: { turtles: Turtle[], switchTurtle: Function }) {
-	const GLTFLoader = require('three/examples/jsm/loaders/GLTFLoader').GLTFLoader;
+	//const GLTFLoader = require('three/examples/jsm/loaders/GLTFLoader').GLTFLoader;
 	const obj = useLoader(GLTFLoader, "/otherturtle.glb") as any;
 
 	return (
