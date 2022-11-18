@@ -55,3 +55,4 @@ As of now I have not figured out how to fix this issue and seem to only appear o
 - [x] Stop sending entire world data to frontend for one block update ( Only send what is updated )
 - [ ] Remove block from database if turtle can go into it
 - [ ] Change the database
+- [ ] Combine turtle and frontend websocket into one websocket
