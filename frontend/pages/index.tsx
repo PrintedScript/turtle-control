@@ -3,7 +3,7 @@ import React, { createContext, Dispatch, SetStateAction, useEffect, useState } f
 import TurtlePage from '../components/Turtle';
 import { EventEmitter } from 'events';
 import WorldRenderer from '../components/World';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -17,6 +17,15 @@ const useStyles = makeStyles(() => ({
 	world: {
 		width: '100%',
 		height: 'calc(100% - 100px)'
+	},
+	message: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		background: '#f52a37',
+		height: 50,
+		width: '100%',
+		padding: 10,
 	},
 }));
 
@@ -221,7 +230,6 @@ const IndexPage = () => {
 
 	const [disableEvents, setDisableEvents] = useState(false);
 
-
 	return (
 		<TurtleContext.Provider value={[turtleId, setTurtleId, turtles]}>
 			<div className={classes.root}>
@@ -230,6 +238,13 @@ const IndexPage = () => {
 					turtles.map((t: Turtle) => (
 						<TurtlePage setDisableEvents={setDisableEvents} enabled={turtleId === t.id} key={t.id} turtle={t} />
 					))
+				}
+				{
+				turtles.length === 0 && <div className={classes.message}>
+					<Typography variant='h5' style={{'fontWeight': 'bold'}}>
+						No turtles are connected
+					</Typography>
+				</div>
 				}
 				<WorldRenderer className={classes.world} turtle={selectedTurtle} world={world} disableEvents={disableEvents} />
 
