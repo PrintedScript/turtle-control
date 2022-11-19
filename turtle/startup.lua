@@ -498,6 +498,14 @@ end
 
 -- BEGIN MAIN CODE --
 
+-- check if we are running on a disk
+if fs.exists("/disk/startup") then
+    if not fs.exists("/startup") then
+        fs.copy("/disk/startup", "/startup")
+        shell.run("reboot")
+    end
+end
+
 function undergoMitosis()
 	turtle.select(getItemIndex("computercraft:peripheral"))
 	if not turtle.place() then
@@ -512,11 +520,10 @@ function undergoMitosis()
 	if not turtle.place() then
 		return nil
 	end
-	peripheral.call("front", "turnOn")
 	turtle.select(1)
 	turtle.drop(math.floor(turtle.getItemCount() / 2))
 	os.sleep(1)
-	peripheral.call("front", "reboot")
+	peripheral.call("front", "turnOn")
 	local cloneId = peripheral.call("front", "getID")
 	if not turtle.down() then
 		return nil

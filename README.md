@@ -39,6 +39,21 @@ Controls
 - Space ( Up )
 - Left Shift ( Down )
 
+### Mitosis
+> Note: This process is still a bit messy and not currently supported, it is recommended to do this manually
+#### Materials needed
+- Mining turtle
+- Disk Drive
+- Floppy Disk
+
+#### Setup
+First you need to clone your turtle startup script onto your floppy disk, you can do this by running the command from any computer or turtle which is connected to the disk drive
+`pastebin get <YOUR PASTEBIN ID> disk/startup`
+Once done place your floppy disk and disk drive into your turtle
+
+#### Cloning
+Before going through mitosis make sure your turtle has fuel in its first slot and another turtle in its inventory, now you can click the `UNDERGO MITOSIS` button and your turtle should start placing down its disk drive and the new turtle. After a few seconds you should see a new turtle appear in your control panel, which means your turtle has successfully connected to your server.
+
 ### Troubleshooting
 #### Location is at 0,0,0
 Make sure your turtle has fuel in it as it is needed to determine its direction. Put any type of fuel source in its inventory, then on the control panel click that slot and then click the refuel button, after that click the refresh info button and the turtle will attempt to recalibrate its position and direction.
