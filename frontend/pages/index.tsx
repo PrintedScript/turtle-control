@@ -77,7 +77,6 @@ export class Turtle extends EventEmitter {
 		this.id = json.id;
 	}
 
-	// i moved these functions to the window because i couldnt figure out why it wasnt showing up in the turtle class
 	async forward() {
 		return window.exec(this.id, 'forward');
 	}
@@ -149,6 +148,11 @@ const IndexPage = () => {
 	const [world, setWorld] = useState<World>({});
 	const [turtleId, setTurtleId] = useState<number>(-1);
 
+	const worldRef = React.useRef<World>(world);
+	const turtlesRef = React.useRef<Turtle[]>(turtles);
+
+	useEffect(() => { worldRef.current = world; }, [world]);
+	useEffect(() => { turtlesRef.current = turtles; }, [turtles]);
 	useEffect( () => {
 		window.setTurtles = (array: any[]) => {
 			setTurtles(array.map(turtle => new Turtle(turtle)));
@@ -161,16 +165,29 @@ const IndexPage = () => {
 			if (data.type === 'world') {
 				setWorld(data.data);
 			} else if (data.type === 'turtles') {
-				setTurtles(JSON.parse(data.data));
+				window.setTurtles(JSON.parse(data.data));
 			} else if (data.type === 'blockupdate') {
 				const block = data.data;
-				world[block.x + ',' + block.y + ',' + block.z] = block.block;
-				console.log(world)
-				setWorld(world);
+				worldRef.current[block.x + ',' + block.y + ',' + block.z] = block.block;
+				setWorld(worldRef.current);
 			} else if (data.type === 'removeblock') {
 				const block = data.data;
-				delete world[block.x + ',' + block.y + ',' + block.z];
-				setWorld(world);
+				delete worldRef.current[block.x + ',' + block.y + ',' + block.z];
+				setWorld(worldRef.current);
+			} else if (data.type === 'turtleupdate') {
+				// { id: turtle.id, x, y, z, d }
+				const turtle_position = data.data;
+				// update the turtle position
+				const turtle = turtlesRef.current.find(t => t.id === turtle_position.id);
+				if (turtle) {
+					turtle.x = turtle_position.x;
+					turtle.y = turtle_position.y;
+					turtle.z = turtle_position.z;
+					turtle.d = turtle_position.d;
+					turtle.fuel = turtle_position.fuel;
+					turtle.inventory = turtle_position.inventory;
+					window.setTurtles(turtlesRef.current);
+				}
 			}
 		})
 
@@ -192,46 +209,6 @@ const IndexPage = () => {
 					}
 				})
 			});
-		}
-		window.suck = async (index : number, dir: BlockDirection) => {
-			return window.exec(index, 'suckItem', dir);
-		}
-		window.dig = async (index : number, dir: BlockDirection) => {
-			return window.exec(index, 'dig', dir);
-		}
-		window.drop = async (index : number, dir: BlockDirection) => {
-			return window.exec(index, 'dropItem', dir);
-		}
-		window.refreshData = () => {
-			window.turtle_websocket.send(JSON.stringify({
-				type: 'refresh'
-			}));
-		}
-		window.place = async (id: number, dir: BlockDirection, signText?: string) => {
-			return window.exec(id, 'place', dir, signText);
-		}
-		window.move = async (id:number, direction: string) => {
-			return window.exec(id, direction);
-		}
-		window.mineTunnel = async (id:number, direction: string, length: number) => {
-			return window.exec(id, 'mineTunnel', direction, length);
-		}
-		window.craft = async (id:number, amount: string) => {
-			if (amount != null ){
-				return window.exec(id, 'craft', amount);
-			}
-		}
-		window.refresh = async (id:number) => {
-			return window.exec(id, 'refresh');
-		}
-		window.undergoMitosis = async (id:number) => {
-			return window.exec(id, 'undergoMitosis');
-		}
-		window.refuel = async (id:number, count?: number) => {
-			return window.exec(id, 'refuel', count);
-		}
-		window.selectSlot = async (id:number, slot: number) => {
-			return window.exec(id, 'selectSlot', slot);
 		}
 
 	}, [setTurtles, setWorld]);

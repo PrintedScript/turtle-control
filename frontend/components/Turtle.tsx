@@ -18,7 +18,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import IconButton from '@material-ui/core/IconButton';
 import DialogActions from '@material-ui/core/DialogActions/DialogActions';
 import TurtleSwitcher from './TurtleSwitcher';
-import { Container, DialogContentText } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
 
 export interface TurtlePageProps {
 	turtle: Turtle;
@@ -71,7 +71,7 @@ export default function TurtlePage({ turtle, enabled, setDisableEvents }: Turtle
 			currentSignDirection.current = dir;
 			setSignText('');
 		} else {
-			window.place(turtle.id,dir);
+			turtle.place(dir);
 		}
 	}
 
@@ -90,7 +90,7 @@ export default function TurtlePage({ turtle, enabled, setDisableEvents }: Turtle
 					<Button onClick={() => setSignText(null)}>Cancel</Button>
 					<Button onClick={() => {
 						setSignText(null);
-						window.place(turtle.id,currentSignDirection.current, signText!);
+						turtle.place(currentSignDirection.current, signText!);
 					}}>Place</Button>
 				</DialogActions>
 			</Dialog>
@@ -103,7 +103,7 @@ export default function TurtlePage({ turtle, enabled, setDisableEvents }: Turtle
 					<Button onClick={() => setCommandText(null)}>Cancel</Button>
 					<Button onClick={() => {
 						setCommandText(null);
-						window.exec(turtle.id, 'exec', commandText!).then((res) => setCommandResult(res));
+						turtle.exec(commandText!).then((res) => setCommandResult(res));
 					}}>Run</Button>
 				</DialogActions>
 			</Dialog>
@@ -120,11 +120,11 @@ export default function TurtlePage({ turtle, enabled, setDisableEvents }: Turtle
 				<Inventory turtle={turtle} />
 				<div className={classes.groups}>
 					<ColoredButtonGroup groupColor='#e74c3c' size="small" orientation="vertical">
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.dig(turtle.id,BlockDirection.UP)}><ArrowUpward /></Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.dig(turtle.id,BlockDirection.FORWARD)}>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.dig(BlockDirection.UP)}><ArrowUpward /></Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.dig(BlockDirection.FORWARD)}>
 							dig
 						</Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.dig(turtle.id,BlockDirection.DOWN)}><ArrowDownward /></Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.dig(BlockDirection.DOWN)}><ArrowDownward /></Button>
 					</ColoredButtonGroup>
 					<ColoredButtonGroup groupColor='#e67e22' size="small" orientation="vertical">
 						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => placeBlock(BlockDirection.UP)}><ArrowUpward /></Button>
@@ -134,27 +134,27 @@ export default function TurtlePage({ turtle, enabled, setDisableEvents }: Turtle
 						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => placeBlock(BlockDirection.DOWN)}><ArrowDownward /></Button>
 					</ColoredButtonGroup>
 					<ColoredButtonGroup groupColor='#f1c40f' size="small" orientation="vertical">
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.suck(turtle.id,BlockDirection.UP)}><ArrowUpward /></Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.suck(turtle.id,BlockDirection.FORWARD)}>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.suck(BlockDirection.UP)}><ArrowUpward /></Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.suck(BlockDirection.FORWARD)}>
 							suck
 						</Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.suck(turtle.id,BlockDirection.DOWN)}><ArrowDownward /></Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.suck(BlockDirection.DOWN)}><ArrowDownward /></Button>
 					</ColoredButtonGroup>
 					<ColoredButtonGroup groupColor='#f1c40f' size="small" orientation="vertical">
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.drop(turtle.id,BlockDirection.UP)}><ArrowUpward /></Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.drop(turtle.id,BlockDirection.FORWARD)}>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.drop(BlockDirection.UP)}><ArrowUpward /></Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.drop(BlockDirection.FORWARD)}>
 							drop
 						</Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.drop(turtle.id,BlockDirection.DOWN)}><ArrowDownward /></Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.drop(BlockDirection.DOWN)}><ArrowDownward /></Button>
 					</ColoredButtonGroup>
 					<ColoredButtonGroup size="small" orientation="vertical" groupColor='#3498db'>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.craft(turtle.id,'all')}>Craft All</Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.craft(turtle.id,'one')}>Craft One</Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.refuel(turtle.id)}>Refuel</Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.craft('all')}>Craft All</Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.craft('one')}>Craft One</Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.refuel()}>Refuel</Button>
 					</ColoredButtonGroup>
 					<ColoredButtonGroup size="small" orientation="vertical" groupColor='#9b59b6'>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.refresh(turtle.id)}>Refresh Info</Button>
-						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => window.undergoMitosis(turtle.id)}>Undergo Mitosis</Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.refresh()}>Refresh Info</Button>
+						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => turtle.undergoMitosis()}>Undergo Mitosis</Button>
 						<Button tabIndex="-1" variant="outlined" color="primary" onClick={() => setCommandText('')}>Run Command</Button>
 					</ColoredButtonGroup>
 					<div>
@@ -167,15 +167,15 @@ export default function TurtlePage({ turtle, enabled, setDisableEvents }: Turtle
 							onChange={(ev) => setMineLength(ev.target.value)}
 							InputProps={{
 								endAdornment: <InputAdornment position="end">
-									<IconButton onClick={() => window.mineTunnel(turtle.id, 'down', parseInt(mineLength))}>
+									<IconButton onClick={() => turtle.mineTunnel('down', parseInt(mineLength))}>
 										<ArrowDownward />
 									</IconButton>
-									<IconButton onClick={() => window.mineTunnel(turtle.id, 'forward', parseInt(mineLength))}>
+									<IconButton onClick={() => turtle.mineTunnel('forward', parseInt(mineLength))}>
 										<SvgIcon>
 											<path d="M14.79,10.62L3.5,21.9L2.1,20.5L13.38,9.21L14.79,10.62M19.27,7.73L19.86,7.14L19.07,6.35L19.71,5.71L18.29,4.29L17.65,4.93L16.86,4.14L16.27,4.73C14.53,3.31 12.57,2.17 10.47,1.37L9.64,3.16C11.39,4.08 13,5.19 14.5,6.5L14,7L17,10L17.5,9.5C18.81,11 19.92,12.61 20.84,14.36L22.63,13.53C21.83,11.43 20.69,9.47 19.27,7.73Z" />
 										</SvgIcon>
 									</IconButton>
-									<IconButton onClick={() => window.mineTunnel(turtle.id, 'up', parseInt(mineLength))}>
+									<IconButton onClick={() => turtle.mineTunnel('up', parseInt(mineLength))}>
 										<ArrowUpward />
 									</IconButton>
 								</InputAdornment>

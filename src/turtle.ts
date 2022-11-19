@@ -176,11 +176,11 @@ export class Turtle extends EventEmitter {
 		while (this.inventory.length < 16) {
 			this.inventory.push(null);
 		}
-		this.emit('update');
+		this.world.updateTurtle(this, this.x, this.y, this.z, this.d, this.fuel, this.inventory);
 	}
 
 	private async updateFuel() {
-		this.emit('update');
+		this.world.updateTurtle(this, this.x, this.y, this.z, this.d, this.fuel, this.inventory);
 	}
 
 	private getDirectionDelta(dir: Direction): [number, number] {
@@ -217,9 +217,9 @@ export class Turtle extends EventEmitter {
 				this.d %= 4;
 				break;
 		}
-		this.world.updateTurtle(this, this.x, this.y, this.z, this.d);
+		this.world.updateTurtle(this, this.x, this.y, this.z, this.d, this.fuel, this.inventory);
 		await this.updateBlock();
-		this.emit('update');
+		//this.emit('update'); Moved update to world.ts so that only the position and direction are updated
 	}
 
 	private async updateBlock() {
@@ -303,7 +303,7 @@ export class Turtle extends EventEmitter {
 				this.y = location!['Y'];
 				this.z = location!['Z'];
 				console.log('Found position and direction for turtle ' + this.label + ' at ' + this.x + ',' + this.y + ',' + this.z + ' facing ' + this.d);
-				this.world.updateTurtle(this, this.x, this.y, this.z, this.d);
+				this.world.updateTurtle(this, this.x, this.y, this.z, this.d, this.fuel, this.inventory);
 			}
 		}
 	}
@@ -432,7 +432,7 @@ export class Turtle extends EventEmitter {
 							if (clearBlock) {
 								this.world.updateBlock(this.x, this.y, this.z, 'No block to inspect');
 							}
-							this.world.updateTurtle(this, this.x, this.y, this.z, this.d);
+							this.world.updateTurtle(this, this.x, this.y, this.z, this.d, this.fuel, this.inventory);
 						}
 						if (res.blocks) {
 							if (direction === 'forward') {
@@ -460,7 +460,6 @@ export class Turtle extends EventEmitter {
 									this.world.updateBlock(this.x + forwardDeltas[0], this.y, this.z + forwardDeltas[1], res.blocks[3]);
 							}
 						}
-						this.emit('update');
 					}
 				}
 			} catch (e) { }

@@ -12,8 +12,11 @@ export default class World extends EventEmitter {
 		this.emit('update', this.getAllBlocks());
 	}
 
-	updateTurtle(turtle: Turtle, x: number, y: number, z: number, d: Direction) {
+	updateTurtle(turtle: Turtle, x: number, y: number, z: number, d: Direction, fuel: number, inventory: any) {
 		this.db.push(`/turtles/${turtle.id}`, [x, y, z, d]);
+		this.updateBlock(x, y, z, "No block to inspect");
+
+		this.emit('turtleupdate', { id: turtle.id, x, y, z, d, fuel, inventory });
 	}
 
 	getTurtle(turtle: Turtle): [number, number, number, Direction] {
