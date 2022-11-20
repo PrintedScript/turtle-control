@@ -1,6 +1,6 @@
 import { Canvas, MeshProps, extend, useFrame, useThree, ReactThreeFiber, useLoader } from '@react-three/fiber';
 import { useRef, useState, useMemo, useEffect, Suspense, HTMLProps, RefObject, SetStateAction, Dispatch, useContext } from 'react';
-import { Mesh, BoxBufferGeometry, Vector3, Quaternion, Euler, Raycaster, Vector2, Object3D } from 'three';
+import { BoxGeometry, Vector3, Quaternion, Euler, Raycaster, Vector2, Object3D } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Turtle, TurtleContext, World } from '../pages';
@@ -195,6 +195,9 @@ export default function WorldRenderer({ turtle, world, disableEvents, ...props }
 						bottom: position.current.y + 100,
 						width: 0,
 						height: 0,
+						x: 0,
+						y: 0,
+						toJSON: () => { }
 					}),
 				}
 			}}
@@ -265,9 +268,10 @@ export default function WorldRenderer({ turtle, world, disableEvents, ...props }
 }
 
 function Box(props: MeshProps & { color: string, name: string, transparent: boolean }) {
-	if (props.name.includes('computercraft:turtle_expanded')) return null;
+	//if (props.name.includes('computercraft:turtle_expanded')) return null;
+	if (props.name.includes('computercraft:turtle')) return null;
 	// This reference will give us direct access to the mesh
-	const mesh = useRef<Mesh>()
+	//const mesh = useRef<Mesh>()
 
 	// Set up state for the hovered and active state
 
@@ -277,13 +281,13 @@ function Box(props: MeshProps & { color: string, name: string, transparent: bool
 	// 	if (lines.current) lines.current.rotation.x = lines.current.rotation.y += 0.01
 	// })
 
-	const geom = useMemo(() => new BoxBufferGeometry(1, 1, 1), []);
+	const geom = useMemo(() => new BoxGeometry(1, 1, 1), []);
 
 	return (
 		<>
 			<mesh
 				{...props}
-				ref={mesh}
+				//ref={mesh}
 				scale={[1, 1, 1]}
 			>
 				<boxBufferGeometry args={[1, 1, 1]} />
