@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 		background: '#f52a37',
 		height: 50,
 		width: '100%',
-		padding: 10,
+		padding: 5,
 	},
 }));
 
@@ -166,23 +166,27 @@ const IndexPage = () => {
 		window.setTurtles = (array: any[]) => {
 			setTurtles(array.map(turtle => new Turtle(turtle)));
 		};
-		window.setWorld = setWorld;
+		window.setWorld = (world: World) => {
+			setWorld(world);
+			//trigger a re-render
+			window.setTurtles(turtlesRef.current);
+		};
 
 		window.turtle_websocket = new WebSocket('ws://localhost:5758');
 		window.turtle_websocket.addEventListener("message", async (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'world') {
-				setWorld(data.data);
+				window.setWorld(data.data);
 			} else if (data.type === 'turtles') {
 				window.setTurtles(JSON.parse(data.data));
 			} else if (data.type === 'blockupdate') {
 				const block = data.data;
 				worldRef.current[block.x + ',' + block.y + ',' + block.z] = block.block;
-				setWorld(worldRef.current);
+				window.setWorld(worldRef.current);
 			} else if (data.type === 'removeblock') {
 				const block = data.data;
 				delete worldRef.current[block.x + ',' + block.y + ',' + block.z];
-				setWorld(worldRef.current);
+				window.setWorld(worldRef.current);
 			} else if (data.type === 'turtleupdate') {
 				// { id: turtle.id, x, y, z, d }
 				const turtle_position = data.data;
@@ -240,11 +244,11 @@ const IndexPage = () => {
 					))
 				}
 				{
-				turtles.length === 0 && <div className={classes.message}>
-					<Typography variant='h5' style={{'fontWeight': 'bold'}}>
-						No turtles are connected
-					</Typography>
-				</div>
+					turtles.length === 0 && <div className={classes.message}>
+						<Typography variant='h5' style={{'fontWeight': 'bold'}}>
+							No turtles are connected
+						</Typography>
+					</div>
 				}
 				<WorldRenderer className={classes.world} turtle={selectedTurtle} world={world} disableEvents={disableEvents} />
 
