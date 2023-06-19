@@ -27,6 +27,7 @@ This will be needed later so just keep that in your clipboard or in notepad.
 The first server you will be starting up is the backend server which is located in the repo folder. To start it run the command `yarn dev`, if it starts up successfully you should see the console saying `Started Turtle Control WS Server on port 5757 and port 5758` which means the server has started. Now to run the frontend server you need to go into the `frontend` folder and run the same command again `yarn dev`. After that the frontend server should have successfully started up, to confirm this go to [localhost:3000](https://localhost:3000) which will show a gray screen ( this is expected ).
 
 #### Connecting your turtles
+> Note: if you are connecting to localhost ComputerCraft may block the connection as localhost is not allowed on default, this can be fixed by changing your ComputerCraft config file https://github.com/cc-tweaked/CC-Tweaked/discussions/626
 Now go to your turtle terminal and type in the command `pastebin get <YOUR PASTEBIN ID> startup` . Replace the `<YOUR PASTEBIN ID>` with the pastebin ID you had created, after that run the `reboot` command, once it finished rebooting you would see the terminal saying `Turtle Control OS, originally created by Ottomated. Modified by PrintedScript`, which has mean you have successfully connected your turtle! 🎉🎉
 
 #### Controlling your turtle
