@@ -28,6 +28,7 @@ The first server you will be starting up is the backend server which is located 
 
 #### Connecting your turtles
 > Note: if you are connecting to localhost ComputerCraft may block the connection as localhost is not allowed on default, this can be fixed by changing your ComputerCraft config file https://github.com/cc-tweaked/CC-Tweaked/discussions/626
+
 Now go to your turtle terminal and type in the command `pastebin get <YOUR PASTEBIN ID> startup` . Replace the `<YOUR PASTEBIN ID>` with the pastebin ID you had created, after that run the `reboot` command, once it finished rebooting you would see the terminal saying `Turtle Control OS, originally created by Ottomated. Modified by PrintedScript`, which has mean you have successfully connected your turtle! 🎉🎉
 
 #### Controlling your turtle
